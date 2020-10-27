@@ -8,5 +8,7 @@ cantidadjugadores= int(input("Ingrese si es uno o dos jugadores: "))
 if cantidadjugadores == 1:
     ServicesPartidas.iniciar_partida_palabra_random(a)
 else:
-    ServicesPartidas.iniciar_partida(a)
+    for i in range (2):
+        print("Es el turno del jugador '{}'".format(i+1))
+        ServicesPartidas.iniciar_partida(a)
 

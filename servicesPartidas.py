@@ -65,31 +65,36 @@ class ServicesPartidas:
     def intentar_letras(self, dificultad, letras, result):
         intentos = self.valor_inicial_intentos(letras, dificultad)
         tamaño = len(letras)
+        contador = 0
         print ("Su palabra tiene '{}' letras".format(tamaño))
-        while intentos > 0:
+        while intentos >= 0:
             letra = input("Ingrese una letra: ")
             print ('Usted ingreso la letra: ',letra)
             if letra in letras:
-                result = result + letra
+                for i in range (tamaño):
+                    if letra in letras[i]:
+                        result = result + letra
                 intentos = intentos - 1
             elif intentos == 1 and letra not in letras:
                 result = result + letra
                 estado = 'Perdió'
-                intentos = intentos -1
+                intentos = -1
                 print (estado)
+                break
             elif intentos > 1 and letra not in letras:
                 result = result + letra
                 estado = 'Continua'
                 intentos = intentos -1
                 print (estado)
-            for indice in range (len(letras)):
-                if letra in result:
-                    contador = contador +1
-                    if contador == len(letras):
-                        result = letras
-                        intentos = 0
-                        estado = 'Ganó'
-                        print (estado)
+            if letra in letras:
+                contador = contador + 1
+                if contador == len(letras):
+                    result = letras
+                    intentos = -1
+                    estado = 'Ganó'
+                    print (estado)
+                    break
+            print (intentos)
         lista = [result, intentos] 
         return lista
 
