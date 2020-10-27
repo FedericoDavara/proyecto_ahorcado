@@ -38,9 +38,10 @@ class ServicesPartidas:
         #return dificultad
     
     def valor_inicial_intentos(self, palabra, dificultad):
-        intentos = len(palabra)*dificultad
-        valor_intentos_mayor(intentos)
-        valor_intentos_menor(intentos)
+        intentos = len(palabra)
+        intentos = intentos * dificultad
+        self.valor_intentos_mayor(intentos)
+        self.valor_intentos_menor(intentos)
         return intentos
 
     def valor_intentos_mayor(self, intentos):
@@ -54,60 +55,64 @@ class ServicesPartidas:
         return intentos
 
     def get_random_palabra (self):
-        numeroRandom = randint(0,10)
+        numeroRandom = randint(0,3)
         return Repositorios.palabrasList[numeroRandom]
 
     def result(self):
+        result = ''
         return result
 
-    def intentos_final(self,intentos):
-        return intentos
-
     def intentar_letras(self, dificultad, letras, result):
-        intentos = valor_inicial_intentos(dificultad,letras)
+        intentos = self.valor_inicial_intentos(letras, dificultad)
         tamaño = len(letras)
         print ("Su palabra tiene '{}' letras".format(tamaño))
         while intentos > 0:
             letra = input("Ingrese una letra: ")
             print ('Usted ingreso la letra: ',letra)
-            for indice,letra in letras:
-                if letras[indice] == letra:
-                    result [indice] = letra
-                    if letras [indice] == result [indice]:
-                        intentos = intentos - 1
-                        intentosf = intentos
-                        intentos_final(intentosf)
+            if letra in letras:
+                result = result + letra
+                intentos = intentos - 1
+            elif intentos == 1 and letra not in letras:
+                result = result + letra
+                estado = 'Perdió'
+                intentos = intentos -1
+                print (estado)
+            elif intentos > 1 and letra not in letras:
+                result = result + letra
+                estado = 'Continua'
+                intentos = intentos -1
+                print (estado)
+            for indice in range (len(letras)):
+                if letra in result:
+                    contador = contador +1
+                    if contador == len(letras):
+                        result = letras
                         intentos = 0
                         estado = 'Ganó'
                         print (estado)
-                    elif intentos == 1:
-                        intentos = intentos - 1
-                        intentos_final(intentos)
-                        estado = 'Perdió'
-                        print (estado)
-                    else:
-                        estado = 'Continua'
-                        intentos = intentos - 1
-                        print (estado)
-        return result
+        lista = [result, intentos] 
+        return lista
 
     def iniciar_partida (self):
         dificultad = int(input("Ingrese la dificultad del 1 al 10: "))
-        palabra =  valor_inicial_palabra()
-        nombre = valor_inicial_nombre_jugador()
-        tipo_palabra = valor_inicial_tipo_palabra()
+        palabra =  self.valor_inicial_palabra()
+        longitud = len(palabra)
+        nombre = self.valor_inicial_nombre_jugador()
+        tipo_palabra = self.valor_inicial_tipo_palabra()
         print ("Su tipo de palabra es '{}' ".format(tipo_palabra))
-        aciertos =  intentar_letras(dificultad,palabra,result())
+        aciertos =  self.intentar_letras(dificultad,palabra,self.result())[0]
+        intentos = self.intentar_letras(dificultad,palabra,self.result())[1]
         partida = Partida (nombre, dificultad, palabra, tipo_palabra, aciertos)
-        add_partida(palabra,tipo_palabra, intentos, nombre, aciertos)
+        self.add_partida(palabra,tipo_palabra, intentos, nombre, aciertos)
 
     def iniciar_partida_palabra_random(self):
         dificultad = int(input("Ingrese la dificultad del 1 al 10: "))
-        nombre_jugador = valor_inicial_nombre_jugador()
-        get_random_palabra = get_random_palabra () 
+        nombre_jugador = self.valor_inicial_nombre_jugador()
+        get_random_palabra = self.get_random_palabra () 
         palabra = get_random_palabra['palabra']
         tipo_palabra = get_random_palabra['tipo_palabra']
         print ("Su tipo de palabra es '{}' ".format(tipo_palabra))
-        aciertos =  intentar_letras(dificultad,palabra,result())
+        aciertos =  self.intentar_letras(dificultad,palabra,self.result())[0]
+        intentos = self.intentar_letras(dificultad,palabra,self.result())[1]
         partida = Partida (nombre_jugador, dificultad, palabra, tipo_palabra, aciertos)
-        add_partida(palabra,tipo_palabra, intentos, nombre_jugador, aciertos)
+        self.add_partida(palabra,tipo_palabra, intentos, nombre_jugador, aciertos)
